@@ -1,10 +1,7 @@
 from flask import render_template,request,redirect
-import utils
-from StudentManagement import db
-import os
 from StudentManagement import app, login
-from StudentManagement.admin import *
-from flask_login import login_user
+from flask_login import login_user,logout_user
+import DAO
 
 
 
@@ -12,22 +9,25 @@ from flask_login import login_user
 def home():
     return render_template('Home.html')
 
-# @app.route('/Login')
-# def Login():
-#     return render_template('Login.html')
-
 @login.user_loader
-def load_taiKhoan(MaTk):
-    return utils.lay_tai_khoan(MaTk = MaTk)
+def load_user(user_id):
+    return DAO.get_user_by_id(user_id=user_id)
 
 @app.route('/admin/login', methods=['POST'])
-def admin_dangNhap():
-    tenDangNhap = request.form.get('tenDangNhap')
-    matKhau = request.form.get('matKhau')
+def admin_login():
+    username = request.form.get('username')
+    password = request.form.get('password')
 
-    taikhoan = utils.kiem_tra_dang_nhap(tenDangNhap = tenDangNhap, matKhau = matKhau)
-    if taikhoan:
-        login_user(user = taikhoan)
+    user = DAO.check_login(username=username, password=password)
+
+    if user:
+        login_user(user=user)
+
+    return redirect('/admin')
+
+@app.route('/admin/logout', methods=['POST'])
+def admin_logout():
+    logout_user()
 
     return redirect('/admin')
 
