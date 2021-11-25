@@ -3,8 +3,9 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose
 from flask_login import logout_user
 from flask import redirect
+from StudentManagement.models import Account
 
-# admin.add_view(ModelView(MonHoc, db.session, name='Môn học'))
+admin.add_view(ModelView(Account, db.session, name='Tài khoản'))
 
 
 class LogoutView(BaseView):

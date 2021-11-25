@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>signinup</title>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body onload="now()">
+
+<form method="post" action="{{ url_for('register') }}" enctype="multipart/form-data">
+  <div class="container">
+    <h1>Register Teacher Information</h1>
+    <hr>
+
+    <label ><b>Họ tên</b></label>
+    <input type="text" placeholder="Họ tên" name="name" id="name" required>
+
+    <label ><b>Giới tính</b></label>
+        <div class="radio">
+            <br>
+            <input type="radio" id="male" name="gender" value="nam">
+            <label for="male">Nam</label>
+            <input type="radio" id="female" name="gender" value="nữ">
+            <label for="female">Nữ</label><br>
+            <input type="radio" id="other" name="gender" value="khác">
+            <label for="other">Khác</label>
+        </div>
+	<hr>
+	<label ><b>Ngày sinh</b></label>
+    <input type="text" placeholder="Ngày sinh" name="birthday" id="birthday" required>
+
+
+	<label ><b>Số điện thoại</b></label>
+    <input type="text" placeholder="Số điện thoại" name="phone" id="phone" required>
+
+	<label for="email"><b>Email</b></label>
+    <input type="text" placeholder="email" name="email" id="email" required>
+
+    <button type="submit" class="registerbtn">Register</button>
+  </div>
+
+  <div class="container signin">
+    <p>Already have an account? <a href="/admin/">Login</a>.</p>
+  </div>
+
+</form>
+
+</body>
+</html>

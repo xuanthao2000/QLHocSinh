@@ -55,7 +55,7 @@ class role(Role):
     staff = 2
     teacher = 3
 
-class User(db.Model, UserMixin):
+class Account(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
@@ -66,6 +66,13 @@ class User(db.Model, UserMixin):
     def __str__(self):
         return self.username
 
+class Teacher(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    gender = Column(String(50), nullable=False)
+    birthday = Column(DateTime, default=datetime.now())
+    phone = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False, unique=True)
 
 if __name__ == '__main__':
     db.create_all()
