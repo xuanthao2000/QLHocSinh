@@ -1,4 +1,4 @@
-from StudentManagement.models import Account, Teacher
+from StudentManagement.models import Account, Teacher, Employee
 import hashlib
 from StudentManagement import db
 
@@ -29,4 +29,20 @@ def register_teacher(name,gender,birthday,phone,email):
     else:
         return True
 
+def register_empoyee(name,gender,birthday,phone,email):
+
+    a = Employee(
+                name=name,
+                gender=gender,
+                birthday=birthday,
+                email=email,
+                phone=phone)
+    db.session.add(a)
+
+    try:
+        db.session.commit()
+    except:
+        return False
+    else:
+        return True
 

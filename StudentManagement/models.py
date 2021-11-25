@@ -74,5 +74,13 @@ class Teacher(db.Model):
     phone = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
 
+class Employee(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    gender = Column(String(50), nullable=False)
+    birthday = Column(DateTime, default=datetime.now())
+    phone = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False, unique=True)
+
 if __name__ == '__main__':
     db.create_all()

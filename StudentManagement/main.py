@@ -33,16 +33,26 @@ def register():
     err_msg =""
     if request.method.__eq__('POST'):
         try:
+            account = request.form['account']
+            name = request.form['name']
             name = request.form['name']
             gender = request.form['gender']
             birthday = request.form['birthday']
             phone = request.form['phone']
             email = request.form['email']
-
-            if DAO.register_teacher(name=name, gender=gender, birthday=birthday, phone=phone, email=email):
-                err_msg = "Tạo tài khoản thành công"
+            print(account)
+            if account.__eq__('employee') :
+                if DAO.register_empoyee(name=name, gender=gender, birthday=birthday, phone=phone, email=email):
+                    err_msg = "Tạo tài khoản thành công"
+                else:
+                    err_msg = "Tạo tài khoản không thành công"
             else:
-                err_msg = "Tạo tài khoản không thành công"
+                if account.__eq__('teacher'):
+                    if DAO.register_teacher(name=name, gender=gender, birthday=birthday, phone=phone, email=email):
+                        err_msg = "Tạo tài khoản thành công"
+                    else:
+                        err_msg = "Tạo tài khoản không thành công"
+
         except Exception as ex:
             error_msg = str(ex)
 
