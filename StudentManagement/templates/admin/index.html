@@ -4,30 +4,53 @@
 {% if current_user.is_authenticated %}
 <h1> alo alo {{ current_user.username }} </h1>
 <form id="logout-form" class="form" action="{{ url_for('admin_logout') }}" method="post">
-        <div class="form-group">
-            <input type="submit" name="submit" class="btn btn-info btn-md" value="Đăng xuất">
-        </div>
+    <div class="form-group">
+        <input type="submit" name="submit" class="btn btn-info btn-md" value="Đăng xuất">
+    </div>
 
 </form>
 {% else %}
-<h1>Đăng nhập</h1>
-<form id="login-form" class="form" action="{{ url_for('admin_login') }}" method="post">
-     <h3 class="text-center text-info">Đăng nhập</h3>
-           <div class="form-group">
-               <label for="username" class="text-info">Tên đăng nhập:</label><br>
-               <input type="text" name="username" id="username" class="form-control">
-           </div>
-        <div class="form-group">
-            <label for="password" class="text-info">Mật khẩu:</label><br>
-            <input type="text" name="password" id="password" class="form-control">
+
+<main class="my-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <h2 class="card-header text-center">Đăng nhập</h2>
+                    <div class="card-body">
+                        <form name="my-form" method="post" action="{{ url_for('admin_login') }}"
+                              enctype="multipart/form-data">
+
+
+                            <div class="form-group row">
+                                <label for="user_name" class="col-md-4 col-form-label text-md-right">Tên đăng
+                                    nhập: </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="user_name" class="form-control" name="username" required>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">Mật khẩu: </label>
+                                <div class="col-md-6">
+                                    <input type="password" id="password" class="form-control" name="password" required>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Đăng nhập
+                                </button>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="remember-me" class="text-info"><span>Nhớ</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>
-            <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
-        </div>
-        <div id="register-link" class="text-right">
-            <a href="/admin/register" class="text-info">Đăng ký ở đây</a>
-        </div>
-</form>
+    </div>
+    </div>
+</main>
 {% endif %}
 {% endblock %}

@@ -1,60 +1,107 @@
+{% extends 'admin/base.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>signinup</title>
-	<meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body onload="now()">
+{% block body %}
+<main class="my-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <h2 class="card-header text-center">Đăng ký tài khoản</h2>
+                    <div class="card-body">
+                        <form name="my-form" method="post" action="{{ url_for('register') }}"
+                              enctype="multipart/form-data">
+                            <div class="form-group column" style="margin-left: 110px">
+                                <h5>Chọn tài khoản cần đăng ký</h5>
+                                <!-- Group of default radios - option 1 -->
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" id="defaultGroupExample1"
+                                           name="account" value="teacher" checked>
+                                    <label class="custom-control-label" for="defaultGroupExample1">Giáo viên</label>
+                                </div>
 
-<form method="post" action="{{ url_for('register') }}" enctype="multipart/form-data">
-  <div class="container">
-    <h1>Register Teacher Information</h1>
-    <hr>
-    <label ><b>Chọn tài khoản cần đăng ký</b></label>
-        <div class="radio">
-            <br>
-            <input type="radio" id="employee" name="account" value="employee">
-            <label for="male">Nhân viên</label>
-            <input type="radio" id="teacher" name="account" value="teacher">
-            <label for="female">Giáo viên</label><br>
+                                <!-- Group of default radios - option 2 -->
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" id="defaultGroupExample2"
+                                           name="account" value="employee">
+                                    <label class="custom-control-label" for="defaultGroupExample2">Nhân viên</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group row">
+                                <label for="email_address" class="col-md-4 col-form-label text-md-right">Địa chỉ
+                                    Email: </label>
+                                <div class="col-md-6">
+                                    <input type="email" id="email_address" class="form-control" name="email"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="name" class="col-md-4 col-form-label text-md-right">Họ tên: </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="name" class="form-control" name="name"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="user_name" class="col-md-4 col-form-label text-md-right">Tên đăng
+                                    nhập: </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="user_name" class="form-control" name="username" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="gender" class="col-md-4 col-form-label text-md-right">Giới tính: </label>
+                                <div class="col-md-6">
+                                    <select id="gender" name="gender" class="form-control">
+                                        <option class="form-control" value="">----</option>
+                                        <option class="form-control" value="nam">nam</option>
+                                        <option class="form-control" value="nữ">nữ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label htmlFor="birthday" class="col-md-4 col-form-label text-md-right">Ngày
+                                    sinh</label>
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" name="birthday" id="birthday" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="phone" class="col-md-4 col-form-label text-md-right">SĐT: </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="phone" class="form-control" name="phone" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">Mật khẩu: </label>
+                                <div class="col-md-6">
+                                    <input type="password" id="password" class="form-control" name="password" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="password-confirm" class="col-md-4 col-form-label text-md-right">Xác nhận mật
+                                    khẩu: </label>
+                                <div class="col-md-6">
+                                    <input type="password" id="password-confirm" class="form-control"
+                                           name="password-confirm" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Đăng ký
+                                </button>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
         </div>
-	<hr>
-    <label ><b>Họ tên</b></label>
-    <input type="text" placeholder="Họ tên" name="name" id="name" required>
+    </div>
+    </div>
 
-    <label ><b>Giới tính</b></label>
-        <div class="radio">
-            <br>
-            <input type="radio" id="male" name="gender" value="nam">
-            <label for="male">Nam</label>
-            <input type="radio" id="female" name="gender" value="nữ">
-            <label for="female">Nữ</label><br>
-            <input type="radio" id="other" name="gender" value="khác">
-            <label for="other">Khác</label>
-        </div>
-	<hr>
-	<label ><b>Ngày sinh</b></label>
-    <input type="text" placeholder="Ngày sinh" name="birthday" id="birthday" required>
-
-
-	<label ><b>Số điện thoại</b></label>
-    <input type="text" placeholder="Số điện thoại" name="phone" id="phone" required>
-
-	<label for="email"><b>Email</b></label>
-    <input type="text" placeholder="email" name="email" id="email" required>
-
-    <button type="submit" class="registerbtn">Register</button>
-  </div>
-
-  <div class="container signin">
-    <p>Already have an account? <a href="/admin/">Login</a>.</p>
-  </div>
-
-</form>
-
-</body>
-</html>
+</main>
+{% endblock %}

@@ -1,19 +1,18 @@
-from flask import render_template,request,redirect
+from flask import render_template, request, redirect
 from StudentManagement import app, login
-from flask_login import login_user,logout_user
+from flask_login import login_user, logout_user
 import DAO
 from StudentManagement.admin import *
-
 
 
 @app.route('/')
 def home():
     return render_template('Home.html')
 
+
 @login.user_loader
 def load_user(user_id):
     return DAO.get_user_by_id(user_id=user_id)
-
 
 
 @app.route('/admin/login', methods=['POST'])
@@ -28,35 +27,42 @@ def admin_login():
 
     return redirect('/admin')
 
-@app.route('/admin/register', methods=['get', 'post'])
+
+@app.route('/admin/register', methods=['POST'])
 def register():
-    err_msg =""
-    if request.method.__eq__('POST'):
-        try:
-            account = request.form['account']
-            name = request.form['name']
-            name = request.form['name']
-            gender = request.form['gender']
-            birthday = request.form['birthday']
-            phone = request.form['phone']
-            email = request.form['email']
-            print(account)
-            if account.__eq__('employee') :
-                if DAO.register_empoyee(name=name, gender=gender, birthday=birthday, phone=phone, email=email):
+    err_msg = ""
+
+
+    try:
+        account = request.form.get('account')
+        name = request.form.get('name')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
+        birthday = request.form.get('birthday')
+        gender = request.form.get('gender')
+        phone = request.form.get('phone')
+
+        print(account, username, email, birthday, gender, phone, username, password)
+
+        if account.__eq__('employee') :
+            if DAO.register_empoyee(name=name, gender=gender, birthday=birthday, phone=phone, email=email, username=username, password=password,user_role=2):
+                err_msg = "Tạo tài khoản thành công"
+            else:
+                err_msg = "Tạo tài khoản không thành công"
+        else:
+            if account.__eq__('teacher'):
+                if DAO.register_teacher(name=name, gender=gender, birthday=birthday, phone=phone, email=email, username=username, password=password, user_role=3):
                     err_msg = "Tạo tài khoản thành công"
                 else:
                     err_msg = "Tạo tài khoản không thành công"
-            else:
-                if account.__eq__('teacher'):
-                    if DAO.register_teacher(name=name, gender=gender, birthday=birthday, phone=phone, email=email):
-                        err_msg = "Tạo tài khoản thành công"
-                    else:
-                        err_msg = "Tạo tài khoản không thành công"
+    except Exception as ex:
+        error_msg = str(ex)
 
-        except Exception as ex:
-            error_msg = str(ex)
 
-    return render_template('/admin/Register.html', err_msg=err_msg)
+    #return render_template('/admin/Register.html', err_msg=err_msg)
+    return redirect('/admin')
+
 
 @app.route('/admin/logout', methods=['POST'])
 def admin_logout():
@@ -64,6 +70,6 @@ def admin_logout():
 
     return redirect('/admin')
 
+
 if __name__ == "__main__":
     app.run(debug=True)
-

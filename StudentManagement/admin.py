@@ -8,6 +8,12 @@ from StudentManagement.models import Account
 admin.add_view(ModelView(Account, db.session, name='Tài khoản'))
 
 
+
+class RegisterView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('/admin/Register.html')
+
 class LogoutView(BaseView):
     @expose('/')
     def index(self):
@@ -16,6 +22,7 @@ class LogoutView(BaseView):
         return redirect('/admin')
 
 admin.add_view(LogoutView(name='Đăng xuất'))
+admin.add_view(RegisterView(name='Đăng ký', endpoint='register'))
 
 
 

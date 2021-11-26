@@ -2,10 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>LT-EDU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.min.css')}}">
 </head>
 <body>
-<h1>Đây là trang chủ</h1>
-<a href="/admin">Đi qua trang admin</a>
+<div id="wrapper">
+    <div class="topbar">
+        <div class="topbar-left">
+            <a href="/">
+                <span class="logo">LT-EDU</span>
+            </a>
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-link">
+                <a href="/admin">
+                    <span class="topbar-link-item">Quản lý</span>
+                </a>
+                <a href="/admin">
+                    <span class="topbar-link-item">Thông báo</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="banner">
+        <div class="home-text-wrapper">
+            <div class="home-message">
+                <p>HỆ THỐNG HỖ TRỢ QUẢN LÝ HỌC SINH</p>
+                <small>
+                    LT-EDU là sự lựa chọn lý tưởng cho tổ chức, doanh nghiệp của bạn
+                    và hệ thống giáo dục trực tuyến của bạn. Tạo khóa học trực tuyến của bạn ngay bây giờ
+                    với các mẫu trang, tùy chọn màu và menu không giới hạn
+                    Tính năng, đặc điểm.
+                </small>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

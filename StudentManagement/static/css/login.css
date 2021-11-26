@@ -1,5 +1,9 @@
 * {box-sizing: border-box}
 
+.navbar{
+display:flex;
+justify-content:space-between}
+
 /* Add padding to containers */
 .container {
   padding: 16px;
