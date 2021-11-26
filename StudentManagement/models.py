@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship # Obj khóa ngoại
 from StudentManagement import db
 from datetime import datetime
 from flask_login import UserMixin
+import enum
 from enum import Enum as Role
 
 # class GiaoVien(db.Model):
@@ -50,10 +51,14 @@ from enum import Enum as Role
 #     MaMH = Column(Integer)
 
 #Bang tai khoan va quyen
-class role(Role):
+class role(enum.Enum):
     admin = 1
     staff = 2
     teacher = 3
+
+    def __str__(self):
+        return self.name
+
 
 class Account(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -62,6 +67,7 @@ class Account(db.Model, UserMixin):
     user_role = Column(Enum(role), default=role.teacher)
     isActive = Column(Boolean, default=False)
     jone_date = Column(DateTime, default=datetime.now())
+    # teacher_profiles = db.relationship('teacher', uselist=False, back_populates="account")
 
     def __str__(self):
         return self.username
@@ -73,6 +79,10 @@ class Teacher(db.Model):
     birthday = Column(DateTime, default=datetime.now())
     phone = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
+    # the one-to-one relation
+    # account_id = db.Column(Integer, ForeignKey('account.id'), primary_key=True)
+    # account = db.relationship('account', back_populates='teacher_profiles', uselist=False)
+
 
 class Employee(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
