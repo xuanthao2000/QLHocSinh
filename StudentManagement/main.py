@@ -25,7 +25,7 @@ def admin_login():
     emp = DAO.check_login_emp(username=username, password=password)
     if teacher:
         login_user(user=teacher)
-        return redirect("/")
+        return redirect("/admin")
     elif admin:
         login_user(user=admin)
         return redirect("/admin")
@@ -41,8 +41,6 @@ def admin_login():
 @app.route('/admin/register', methods=['POST'])
 def register():
     err_msg = ""
-
-
     try:
         account = request.form.get('account')
         name = request.form.get('name')
@@ -56,13 +54,15 @@ def register():
         print(account, username, email, birthday, gender, phone, username, password)
 
         if account.__eq__('employee') :
-            if DAO.register_empoyee(name=name, gender=gender, birthday=birthday, phone=phone, email=email, username=username, password=password,user_role=2):
+            if DAO.register_empoyee(name=name, gender=gender, birthday=birthday, phone=phone,
+                                    email=email, username=username, password=password):
                 err_msg = "Tạo tài khoản thành công"
             else:
                 err_msg = "Tạo tài khoản không thành công"
         else:
             if account.__eq__('teacher'):
-                if DAO.register_teacher(name=name, gender=gender, birthday=birthday, phone=phone, email=email, username=username, password=password, user_role=3):
+                if DAO.register_teacher(name=name, gender=gender, birthday=birthday, phone=phone,
+                                        email=email, username=username, password=password):
                     err_msg = "Tạo tài khoản thành công"
                 else:
                     err_msg = "Tạo tài khoản không thành công"
