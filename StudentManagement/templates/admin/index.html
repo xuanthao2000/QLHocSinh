@@ -2,13 +2,75 @@
 
 {% block body %}
 {% if current_user.is_authenticated %}
-<h1> alo alo {{ current_user.username }} </h1>
-<form id="logout-form" class="form" action="{{ url_for('admin_logout') }}" method="post">
-    <div class="form-group">
-        <input type="submit" name="submit" class="btn btn-info btn-md" value="Đăng xuất">
-    </div>
+<h1> xin chào {{ current_user.username }} </h1>
+<h2> đây là trang quản trị</h2>
 
-</form>
+<div class="row">
+    <div class="col-md-6 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Ma danh muc</th>
+                <th>Ten danh muc</th>
+                <th>So luong san pham</th>
+            </tr>
+            {% for s in stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ s[2] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <canvas id="myCategoryChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels = []
+    let data = []
+    let colors = []
+    let borderColors = []
+    let r, g, b;
+
+    {% for s in stats %}
+        labels.push('{{ s[1] }}')
+        data.push({{ s[2] }})
+
+        r = Math.random()*255
+        g = Math.random()*255
+        b = Math.random()*255
+
+        colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+        borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endfor %}
+
+    window.onload = function() {
+        const ctx = document.getElementById('myCategoryChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Thong ke so san pham theo danh muc',
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
 {% else %}
 
 <main class="my-form">
@@ -16,12 +78,9 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <h2 class="card-header text-center">Đăng nhập</h2>
+                    <h2 class="card-header text-center">Đăng nhập quản trị</h2>
                     <div class="card-body">
-                        <form name="my-form" method="post" action="{{ url_for('admin_login') }}"
-                              enctype="multipart/form-data">
-
-
+                        <form name="my-form" method="post" action="{{ url_for('admin_login') }}">
                             <div class="form-group row">
                                 <label for="user_name" class="col-md-4 col-form-label text-md-right">Tên đăng
                                     nhập: </label>
@@ -30,7 +89,6 @@
                                 </div>
                             </div>
 
-
                             <div class="form-group row">
                                 <label for="password" class="col-md-4 col-form-label text-md-right">Mật khẩu: </label>
                                 <div class="col-md-6">
@@ -38,18 +96,16 @@
                                 </div>
                             </div>
 
-
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     Đăng nhập
                                 </button>
                             </div>
+                        </form>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </main>
 {% endif %}

@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect,flash
 from StudentManagement import app, login
 from flask_login import login_user, logout_user
 import DAO
@@ -33,7 +33,7 @@ def admin_login():
         login_user(user=emp)
         return redirect("/admin")
     else:
-        err_msg = "Sai tên đăng nhập hoặc mật khẩu"
+        flash("Sai tên đăng nhập hoặc mật khẩu", "danger")
 
     return redirect('/admin')
 

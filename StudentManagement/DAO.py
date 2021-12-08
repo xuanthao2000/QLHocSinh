@@ -1,4 +1,4 @@
-from StudentManagement.models import Account, Teacher, Employee, role
+from StudentManagement.models import Account, Teacher, Employee, Role
 import hashlib
 from StudentManagement import db
 
@@ -15,7 +15,7 @@ def check_login(username, password):
         return Account.query.filter(Account.username.__eq__(username.strip()),
                                     Account.password.__eq__(password)).first()
 
-def check_login_emp(username, password, role=role.staff):
+def check_login_emp(username, password, role=Role.EMPLOYEE):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
 
     user = Account.query.filter(Account.username == username,
@@ -24,7 +24,7 @@ def check_login_emp(username, password, role=role.staff):
 
     return user
 
-def check_login_admin(username, password, role=role.admin):
+def check_login_admin(username, password, role=Role.ADMIN):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
 
     user = Account.query.filter(Account.username == username,
@@ -33,7 +33,7 @@ def check_login_admin(username, password, role=role.admin):
 
     return user
 
-def check_login_teacher(username, password, role=role.teacher):
+def check_login_teacher(username, password, role=Role.TEACHER):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
 
     user = Account.query.filter(Account.username == username,
@@ -44,7 +44,7 @@ def check_login_teacher(username, password, role=role.teacher):
 
 def register_teacher(name, gender, birthday, phone, email, username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
-    account = Account(username=username, password=password, user_role=role.teacher)
+    account = Account(username=username, password=password, user_role=Role.TEACHER)
 
     teacher = Teacher(name=name, gender=gender, birthday=birthday, email=email, phone=phone)
 
@@ -64,7 +64,7 @@ def register_teacher(name, gender, birthday, phone, email, username, password):
 
 def register_empoyee(name, gender, birthday, phone, email, username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
-    account = Account(username=username, password=password, user_role=role.staff)
+    account = Account(username=username, password=password, user_role=Role.EMPLOYEE)
 
     employee = Employee(
         name=name,
