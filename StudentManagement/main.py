@@ -20,18 +20,10 @@ def admin_login():
     username = request.form.get('username')
     password = request.form.get('password')
 
-    teacher = DAO.check_login_teacher(username=username, password=password)
-    admin = DAO.check_login_admin(username=username, password=password)
-    emp = DAO.check_login_emp(username=username, password=password)
-    if teacher:
-        login_user(user=teacher)
-        return redirect("/admin")
-    elif admin:
-        login_user(user=admin)
-        return redirect("/admin")
-    elif emp:
-        login_user(user=emp)
-        return redirect("/admin")
+    user = DAO.check_login_admin(username=username, password=password)
+
+    if user:
+        login_user(user=user)
     else:
         flash("Sai tên đăng nhập hoặc mật khẩu", "danger")
 

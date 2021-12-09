@@ -1,4 +1,6 @@
-from StudentManagement.models import Account, Teacher, Employee, Role
+from sqlalchemy import func
+
+from StudentManagement.models import Account, Teacher, Employee, Role, ClassRoom, Student, Semester, Subject, Score
 import hashlib
 from StudentManagement import db
 
@@ -84,3 +86,30 @@ def register_empoyee(name, gender, birthday, phone, email, username, password):
         return False
     else:
         return True
+
+def get_class_room_by_id(id):
+    return ClassRoom.query.get(id)
+
+def get_all_semester():
+    return Semester.query.all()
+
+def get_all_subject():
+    return Subject.query.all()
+
+
+
+def class_room_stats(se=None, sub=None, year=None):
+    class_room = db.session.query(ClassRoom.name, ClassRoom.number_of_students, func.count(Student.id))\
+        .join(Student, ClassRoom.id == Student.classRoom_id)\
+        .join(Score, Score.student_id == Student.id)\
+        .join(Semester, Semester.id == Score.semester_id)\
+        .join(Subject, Subject.id == Score.subject_id)\
+        .group_by(ClassRoom.name)
+
+
+    result = class_room.filter(Score.score_avg >= 5,
+                               Semester.id == se,
+                               Semester.school_year == year,
+                               Subject.id == sub)
+
+    return result.all()
