@@ -45,47 +45,72 @@ def check_login_teacher(username, password, role=Role.TEACHER):
     return user
 
 def register_teacher(name, gender, birthday, phone, email, username, password):
+    exist_user = Account.query.filter(Account.username == username).first()
+    exist_email = Teacher.query.filter(Teacher.email == email).first()
+    if exist_user:
+        msg = 'Tên tài khoản đã tồn tại!!!'
+        return msg
+    else:
+        if exist_email:
+            msg = 'Địa chỉ email đã tồn tại!!!'
+            return msg
+
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     account = Account(username=username, password=password, user_role=Role.TEACHER)
 
-    teacher = Teacher(name=name, gender=gender, birthday=birthday, email=email, phone=phone)
-
     try:
-
         db.session.add(account)
         db.session.commit()
+
+        a = Account.query.filter(Account.username == username,
+                             Account.password == password).first()
+
+        teacher = Teacher(name=name, gender=gender, birthday=birthday,
+                          email=email, phone=phone, account_id=a.id)
 
         db.session.add(teacher)
         db.session.commit()
 
     except:
-        return False
+        msg = "Tạo tài khoản thất bại"
+        return msg
     else:
-        return True
+        msg = 'Success'
+        return msg
 
 
 def register_empoyee(name, gender, birthday, phone, email, username, password):
+    exist_user = Account.query.filter(Account.username == username).first()
+    exist_email = Employee.query.filter(Employee.email == email).first()
+    if exist_user:
+        msg = 'Tên tài khoản đã tồn tại!!!'
+        return msg
+    else:
+        if exist_email:
+            msg = 'Địa chỉ email đã tồn tại!!!'
+            return msg
+
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     account = Account(username=username, password=password, user_role=Role.EMPLOYEE)
-
-    employee = Employee(
-        name=name,
-        gender=gender,
-        birthday=birthday,
-        email=email,
-        phone=phone)
-
 
     try:
         db.session.add(account)
         db.session.commit()
 
+        a = Account.query.filter(Account.username == username,
+                                 Account.password == password).first()
+
+        employee = Employee(name=name, gender=gender, birthday=birthday,
+                          email=email, phone=phone, account_id=a.id)
+
         db.session.add(employee)
         db.session.commit()
     except:
-        return False
+        msg = "Tạo tài khoản thất bại"
+        return msg
     else:
-        return True
+        msg = 'Success'
+        return msg
 
 def get_class_room_by_id(id):
     return ClassRoom.query.get(id)

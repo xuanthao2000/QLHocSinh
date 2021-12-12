@@ -22,8 +22,8 @@ class Account(BaseModel, UserMixin):
     user_role = Column(Enum(Role), default=Role.TEACHER)
     isActive = Column(Boolean, default=False)
     jone_date = Column(DateTime, default=datetime.now())
-    teacher = relationship('Teacher', backref='Account', lazy=True, uselist=False)
-    employee = relationship('Employee', backref='Account', lazy=True, uselist=False)
+    teacher = relationship('Teacher', uselist=False, backref='Account', lazy=True)
+    employee = relationship('Employee', uselist=False, backref='Account', lazy=True)
 
 
     def __str__(self):
@@ -37,6 +37,9 @@ class Teacher(BaseModel):
     email = Column(String(50), nullable=False, unique=True)
     account_id = Column(Integer, ForeignKey(Account.id))
 
+    def __str__(self):
+        return self.name
+
 
 class Employee(BaseModel):
     name = Column(String(50), nullable=False)
@@ -46,6 +49,9 @@ class Employee(BaseModel):
     email = Column(String(50), nullable=False, unique=True)
     account_id = Column(Integer, ForeignKey(Account.id))
 
+    def __str__(self):
+        return self.name
+
 class Semester(BaseModel):
     __tablename__ = 'semester'
     name = Column(String(25), default='HK1', nullable=False)
@@ -53,7 +59,6 @@ class Semester(BaseModel):
     from_date = Column(DateTime)
     to_date = Column(DateTime)
     scores = relationship('Score', backref='semester', lazy=False)
-
 
     def __str__(self):
         return self.name

@@ -74,16 +74,13 @@ class ScoreView(AdminAuthModelView):
         'score_60_2': 'Điểm 1 tiết lần 2',
         'score_60_3': 'Điểm 1 tiết lần 3',
         'score_final_exam': 'Điểm cuối kì',
+        'score_avg': 'Điểm trung bình',
         'semester': 'Học kì',
         'student': 'Học sinh',
         'subject': 'Môn học'
     }
     column_filters = ['subject']
 
-class RegisterView(BaseView):
-    @expose('/')
-    def index(self):
-        return self.render('/admin/Register.html')
 
 class LogoutView(BaseView):
     @expose('/')
@@ -124,9 +121,6 @@ admin.add_view(ScoreView(Score, db.session, name='Điểm'))
 
 admin.add_view(StatsView(name='Thống kê'))
 
-
-
-#admin.add_view(RegisterView(name='Đăng ký', endpoint='register'))
 
 admin.add_view(LogoutView(name='Đăng xuất'))
 

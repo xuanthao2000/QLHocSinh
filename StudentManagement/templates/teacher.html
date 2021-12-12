@@ -1,0 +1,14 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Giáo viên{% endblock %}
+
+{% block content %}
+
+
+{% if current_user.is_authenticated %}
+<h1>giáo viên</h1>
+{% else %}
+<h1>Vui lòng <a href="/login">đăng nhập</a> để tiếp tục</h1>
+{% endif %}
+
+{% endblock %}
