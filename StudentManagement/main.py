@@ -77,22 +77,29 @@ def register():
             gender = request.form.get('gender')
             phone = request.form.get('phone')
 
-
-            if password.__eq__(confirm):
-                if account == 'teacher':
-                    res = DAO.register_teacher(name, gender, birthday, phone, email, username, password)
-                    if res == 'Success':
-                        return redirect(url_for('login'))
-                    else:
-                        error_msg = res
-                else:
-                    res = DAO.register_empoyee(name, gender, birthday, phone, email, username, password)
-                    if res == 'Success':
-                        return redirect(url_for('login'))
-                    else:
-                        error_msg = res
+            if DAO.get_account_by_username(username):
+                error_msg = "Tên tài khoản đã tồn tại!!!"
             else:
-                error_msg = "Mat khau KHONG khop!"
+                if password.__eq__(confirm):
+                    if account == 'teacher':
+                        if DAO.check_email_teacher(email):
+                            error_msg = "Địa chỉ email đã tồn tại!!!"
+                        else:
+                            if DAO.register_teacher(name, gender, birthday, phone, email, username, password):
+                                return redirect(url_for('login'))
+                            else:
+                                error_msg = "Đã xảy ra lỗi"
+                    else:
+                        if DAO.check_email_employee(email):
+                            error_msg = "Địa chỉ email đã tồn tại!!!"
+                        else:
+                            if DAO.register_employee(name, gender, birthday, phone, email, username, password):
+                                return redirect(url_for('login'))
+                            else:
+                                error_msg = "Đã xảy ra lỗi"
+                else:
+                    error_msg = "Mật khẩu không khớp!!!"
+
         except Exception as ex:
             error_msg = str(ex)
 

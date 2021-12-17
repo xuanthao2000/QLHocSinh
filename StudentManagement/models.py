@@ -25,13 +25,12 @@ class Account(BaseModel, UserMixin):
     teacher = relationship('Teacher', uselist=False, backref='Account', lazy=True)
     employee = relationship('Employee', uselist=False, backref='Account', lazy=True)
 
-
     def __str__(self):
         return self.username
 
 class Teacher(BaseModel):
     name = Column(String(50), nullable=False)
-    gender = Column(String(50), nullable=False)
+    gender = Column(String(10), nullable=False)
     birthday = Column(DateTime, default=datetime.now())
     phone = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
@@ -43,7 +42,7 @@ class Teacher(BaseModel):
 
 class Employee(BaseModel):
     name = Column(String(50), nullable=False)
-    gender = Column(String(50), nullable=False)
+    gender = Column(String(10), nullable=False)
     birthday = Column(DateTime, default=datetime.now())
     phone = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
@@ -79,7 +78,7 @@ class Student(BaseModel):
     email = Column(String(25), nullable=False, unique=True)
     birthday = Column(DateTime)
     address = Column(String(100))
-    gender = Column(Boolean, default=True)
+    gender = Column(String(10))
     classRoom_id = Column(Integer, ForeignKey(ClassRoom.id))
     scores = relationship('Score', backref='student', lazy=False)
 

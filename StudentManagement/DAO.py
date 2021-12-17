@@ -45,16 +45,6 @@ def check_login_teacher(username, password, role=Role.TEACHER):
     return user
 
 def register_teacher(name, gender, birthday, phone, email, username, password):
-    exist_user = Account.query.filter(Account.username == username).first()
-    exist_email = Teacher.query.filter(Teacher.email == email).first()
-    if exist_user:
-        msg = 'Tên tài khoản đã tồn tại!!!'
-        return msg
-    else:
-        if exist_email:
-            msg = 'Địa chỉ email đã tồn tại!!!'
-            return msg
-
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     account = Account(username=username, password=password, user_role=Role.TEACHER)
 
@@ -72,24 +62,12 @@ def register_teacher(name, gender, birthday, phone, email, username, password):
         db.session.commit()
 
     except:
-        msg = "Tạo tài khoản thất bại"
-        return msg
+        return False
     else:
-        msg = 'Success'
-        return msg
+        return True
 
 
-def register_empoyee(name, gender, birthday, phone, email, username, password):
-    exist_user = Account.query.filter(Account.username == username).first()
-    exist_email = Employee.query.filter(Employee.email == email).first()
-    if exist_user:
-        msg = 'Tên tài khoản đã tồn tại!!!'
-        return msg
-    else:
-        if exist_email:
-            msg = 'Địa chỉ email đã tồn tại!!!'
-            return msg
-
+def register_employee(name, gender, birthday, phone, email, username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     account = Account(username=username, password=password, user_role=Role.EMPLOYEE)
 
@@ -106,11 +84,18 @@ def register_empoyee(name, gender, birthday, phone, email, username, password):
         db.session.add(employee)
         db.session.commit()
     except:
-        msg = "Tạo tài khoản thất bại"
-        return msg
+        return False
     else:
-        msg = 'Success'
-        return msg
+        return True
+
+def check_email_teacher(email):
+    return Teacher.query.filter(Teacher.email == email).first()
+
+def check_email_employee(email):
+    return Employee.query.filter(Employee.email == email).first()
+
+def get_account_by_username(username):
+    return Account.query.filter(Account.username == username).first()
 
 def get_class_room_by_id(id):
     return ClassRoom.query.get(id)
