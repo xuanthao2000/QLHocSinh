@@ -1,14 +1,16 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, Enum, Float
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from StudentManagement import db
 from datetime import datetime
 from flask_login import UserMixin
 import enum
 
+
 class BaseModel(db.Model):
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+
 
 class Role(enum.Enum):
     ADMIN = 1
@@ -22,11 +24,12 @@ class Account(BaseModel, UserMixin):
     user_role = Column(Enum(Role), default=Role.TEACHER)
     isActive = Column(Boolean, default=False)
     jone_date = Column(DateTime, default=datetime.now())
-    teacher = relationship('Teacher', uselist=False, backref='Account', lazy=True)
-    employee = relationship('Employee', uselist=False, backref='Account', lazy=True)
+    teacher = relationship('Teacher', backref=backref('Account', uselist=False), lazy=True)
+    employee = relationship('Employee', backref=backref('Account', uselist=False), lazy=True)
 
     def __str__(self):
         return self.username
+
 
 class Teacher(BaseModel):
     name = Column(String(50), nullable=False)
@@ -51,6 +54,7 @@ class Employee(BaseModel):
     def __str__(self):
         return self.name
 
+
 class Semester(BaseModel):
     __tablename__ = 'semester'
     name = Column(String(25), default='HK1', nullable=False)
@@ -67,10 +71,18 @@ class ClassRoom(BaseModel):
     __tablename__ = 'class_room'
     name = Column(String(25), nullable=False)
     number_of_students = Column(Integer, default=0)
-    students = relationship('Student', backref='class_room', lazy=False)
+    students = relationship('Student', backref='class_room', lazy=True)
+    teachers = relationship('Teacher', secondary='class_room_teacher', lazy='subquery',
+                            backref=backref('class_room', lazy=True))
 
     def __str__(self):
         return self.name
+
+class_room_teacher = db.Table(
+    'class_room_teacher',
+    Column('class_room_id', Integer, ForeignKey(ClassRoom.id), primary_key=True),
+    Column('teacher_id', Integer, ForeignKey(Teacher.id), primary_key=True)
+)
 
 class Student(BaseModel):
     __tablename__ = 'student'
@@ -85,6 +97,7 @@ class Student(BaseModel):
     def __str__(self):
         return self.name
 
+
 class Subject(BaseModel):
     __tablename__ = 'subject'
     name = Column(String(25), nullable=False)
@@ -92,6 +105,7 @@ class Subject(BaseModel):
 
     def __str__(self):
         return self.name
+
 
 class Score(db.Model):
     student_id = Column(Integer, ForeignKey(Student.id), nullable=False, primary_key=True)
@@ -107,7 +121,6 @@ class Score(db.Model):
     score_60_3 = Column(Float, default=0)
     score_final_exam = Column(Float, default=0)
     score_avg = Column(Float, default=0)
-
 
 
 if __name__ == '__main__':
@@ -168,11 +181,11 @@ if __name__ == '__main__':
     student9 = Student(name='test9', email='test9@gmail.com',
                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=3)
     student10 = Student(name='test10', email='test10@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=3)
+                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=3)
     student11 = Student(name='test11', email='test11@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=4)
+                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=4)
     student12 = Student(name='test12', email='test12@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=4)
+                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=4)
     student13 = Student(name='test13', email='test13@gmail.com',
                         birthday='2018-02-20 00:00:00', address='test', classRoom_id=5)
     student14 = Student(name='test14', email='test14@gmail.com',
@@ -209,14 +222,220 @@ if __name__ == '__main__':
                    score_60_1=7, score_60_2=7, score_60_3=7,
                    score_final_exam=7,
                    score_avg=7.7)
+    score2 = Score(student_id=1, subject_id=2, semester_id=1,
+                   score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                   score_60_1=7, score_60_2=7, score_60_3=7,
+                   score_final_exam=7,
+                   score_avg=7.7)
+    score3 = Score(student_id=1, subject_id=3, semester_id=1,
+                   score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                   score_60_1=7, score_60_2=7, score_60_3=7,
+                   score_final_exam=7,
+                   score_avg=7.7)
 
+    score4 = Score(student_id=2, subject_id=1, semester_id=1,
+                   score_15_1=4, score_15_2=2, score_15_3=3, score_15_4=1, score_15_5=5,
+                   score_60_1=3, score_60_2=5, score_60_3=2,
+                   score_final_exam=5,
+                   score_avg=4.2)
+    score5 = Score(student_id=2, subject_id=2, semester_id=1,
+                   score_15_1=4, score_15_2=2, score_15_3=3, score_15_4=1, score_15_5=5,
+                   score_60_1=3, score_60_2=5, score_60_3=2,
+                   score_final_exam=5,
+                   score_avg=4.2)
+    score6 = Score(student_id=2, subject_id=3, semester_id=1,
+                   score_15_1=7, score_15_2=8, score_15_3=7, score_15_4=8, score_15_5=7,
+                   score_60_1=8, score_60_2=7, score_60_3=8,
+                   score_final_exam=8,
+                   score_avg=7.8)
+
+    score7 = Score(student_id=3, subject_id=1, semester_id=1,
+                   score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                   score_60_1=7, score_60_2=7, score_60_3=7,
+                   score_final_exam=7,
+                   score_avg=7.7)
+    score8 = Score(student_id=3, subject_id=2, semester_id=1,
+                   score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                   score_60_1=7, score_60_2=7, score_60_3=7,
+                   score_final_exam=7,
+                   score_avg=7.7)
+    score9 = Score(student_id=3, subject_id=3, semester_id=1,
+                   score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                   score_60_1=7, score_60_2=7, score_60_3=7,
+                   score_final_exam=7,
+                   score_avg=7.7)
+
+    score10 = Score(student_id=4, subject_id=1, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score11 = Score(student_id=4, subject_id=2, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score12 = Score(student_id=4, subject_id=3, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    # Lop a2
+    score13 = Score(student_id=5, subject_id=1, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score14 = Score(student_id=5, subject_id=2, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score15 = Score(student_id=5, subject_id=3, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score16 = Score(student_id=6, subject_id=1, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score17 = Score(student_id=6, subject_id=2, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score18 = Score(student_id=6, subject_id=3, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score19 = Score(student_id=7, subject_id=1, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score20 = Score(student_id=7, subject_id=2, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score21 = Score(student_id=7, subject_id=3, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score22 = Score(student_id=8, subject_id=1, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score23 = Score(student_id=8, subject_id=2, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score24 = Score(student_id=8, subject_id=3, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    # hk2
+    score25 = Score(student_id=9, subject_id=1, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score26 = Score(student_id=9, subject_id=2, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score27 = Score(student_id=9, subject_id=3, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score28 = Score(student_id=9, subject_id=1, semester_id=2,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score29 = Score(student_id=9, subject_id=2, semester_id=2,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score30 = Score(student_id=9, subject_id=3, semester_id=2,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score31 = Score(student_id=10, subject_id=1, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score32 = Score(student_id=10, subject_id=2, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score33 = Score(student_id=10, subject_id=3, semester_id=1,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score34 = Score(student_id=10, subject_id=1, semester_id=2,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score35 = Score(student_id=10, subject_id=2, semester_id=2,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
+    score36 = Score(student_id=10, subject_id=3, semester_id=2,
+                    score_15_1=7, score_15_2=7, score_15_3=7, score_15_4=8, score_15_5=7,
+                    score_60_1=7, score_60_2=7, score_60_3=7,
+                    score_final_exam=7,
+                    score_avg=7.7)
     db.session.add(score1)
+    db.session.add(score2)
+    db.session.add(score3)
+    db.session.add(score4)
+    db.session.add(score5)
+    db.session.add(score6)
+    db.session.add(score7)
+    db.session.add(score8)
+    db.session.add(score9)
+    db.session.add(score10)
+    db.session.add(score11)
+    db.session.add(score12)
+    db.session.add(score13)
+    db.session.add(score14)
+    db.session.add(score15)
+    db.session.add(score16)
+    db.session.add(score17)
+    db.session.add(score18)
+    db.session.add(score19)
+    db.session.add(score20)
+    db.session.add(score21)
+    db.session.add(score22)
+    db.session.add(score23)
+    db.session.add(score24)
+    db.session.add(score25)
+    db.session.add(score26)
+    db.session.add(score27)
+    db.session.add(score28)
+    db.session.add(score29)
+    db.session.add(score30)
+    db.session.add(score31)
+    db.session.add(score32)
+    db.session.add(score33)
+    db.session.add(score34)
+    db.session.add(score35)
+    db.session.add(score36)
     db.session.commit()
-
-
-
-
-
-
-
-
