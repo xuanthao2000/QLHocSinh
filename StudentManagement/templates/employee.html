@@ -1,0 +1,149 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Nhân viên{% endblock %}
+
+{% block content %}
+
+
+{% if current_user.is_authenticated %}
+
+{% if error_msg %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error_msg }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+{% if success_msg %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ success_msg }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+<script>
+function showAddStudent() {
+   document.getElementById('add-student').style.display = "";
+   document.getElementById('all-classroom').style.display = "none";
+   document.getElementById('add-classroom').style.display = "none";
+}
+
+function showAllClass() {
+   document.getElementById('add-student').style.display = "none";
+   document.getElementById('all-classroom').style.display = "";
+   document.getElementById('add-classroom').style.display = "none";
+}
+
+function showAddClass() {
+   document.getElementById('add-student').style.display = "none";
+   document.getElementById('all-classroom').style.display = "none";
+   document.getElementById('add-classroom').style.display = "";
+}
+
+
+
+
+</script>
+
+
+<div class="row justify-content-center mb-5">
+    <button onclick="showAddStudent()" class="btn card mr-5">thêm học sinh</button>
+    <button onclick="showAllClass()" class="btn card mr-5">danh sách lớp</button>
+    <button onclick="showAddClass()" class="btn card ">thêm lớp</button>
+</div>
+
+<div class="row justify-content-center" id="add-student" style="display:none">
+    <div class="col-md-6">
+        <h1>Thêm học sinh</h1>
+        <form method="post" class="was-validated" action="{{ url_for('add_student') }}">
+            <div class="">
+                <div class="">
+                    <div class="form-group">
+                        <label for="name">Họ tên: </label>
+                        <input type="text" id="name" class="form-control" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Giới tính: </label>
+                        <select id="gender" name="gender" class="form-control" required>
+                            <option class="form-control" value='Nam'>nam</option>
+                            <option class="form-control" value='Nữ'>nữ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">Ngày sinh:</label>
+                        <div id="notify" style="display: none">thong bao</div>
+                        <input type="date" class="form-control" id="birthday" name="birthday" max="2021-12-31" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại:</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ:</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                </div>
+
+            </div>
+            <input type="submit" value="Thêm" class="btn btn-success">
+        </form>
+    </div>
+
+</div>
+<br><br>
+
+<div class="row justify-content-center" id="all-classroom">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Tên lớp</th>
+            <th scope="col">Sỉ số</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in class_room %}
+        <tr>
+            <td>{{c.id}}</td>
+            <td>{{c.name}}</td>
+            <td>{{c.number_of_students}}</td>
+            <td><a href="/classroom/{{c.id}}">chi tiết lớp</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<div class="row justify-content-center" id="add-classroom" style="display:none">
+    <div class="col-md-6">
+        <h1>Thêm lớp học</h1>
+        <form method="post" class="was-validated" action="{{ url_for('add_student') }}">
+            <div class="">
+                <div class="">
+                    <div class="form-group">
+                        <label for="class_name">Tên lớp: </label>
+                        <input type="text" id="class_name" class="form-control" name="class_name" required>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <input type="submit" value="Thêm" class="btn btn-success">
+        </form>
+    </div>
+
+</div>
+{% else %}
+<h1>Vui lòng <a href="/login">đăng nhập</a> để tiếp tục</h1>
+{% endif %}
+
+{% endblock %}

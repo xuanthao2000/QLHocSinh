@@ -78,11 +78,13 @@ class ClassRoom(BaseModel):
     def __str__(self):
         return self.name
 
+
 class_room_teacher = db.Table(
     'class_room_teacher',
     Column('class_room_id', Integer, ForeignKey(ClassRoom.id), primary_key=True),
     Column('teacher_id', Integer, ForeignKey(Teacher.id), primary_key=True)
 )
+
 
 class Student(BaseModel):
     __tablename__ = 'student'
@@ -91,6 +93,7 @@ class Student(BaseModel):
     birthday = Column(DateTime)
     address = Column(String(100))
     gender = Column(String(10))
+    phone = Column(String(10))
     classRoom_id = Column(Integer, ForeignKey(ClassRoom.id))
     scores = relationship('Score', backref='student', lazy=False)
 
@@ -163,33 +166,47 @@ if __name__ == '__main__':
     db.session.commit()
 
     student1 = Student(name='Trần Nhật Long', email='nhatlong1826@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=1)
+                       birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=1)
     student2 = Student(name='test1', email='test1@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=1)
+                       birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=1)
     student3 = Student(name='test2', email='test2@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=1)
+                       birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=1)
     student4 = Student(name='test3', email='test3@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=1)
+                       birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=1)
     student5 = Student(name='Nguyễn Xuân Thao', email='thaothao@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=2)
+                       birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=2)
     student6 = Student(name='test4', email='test4@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=2)
+                       birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=2)
     student7 = Student(name='test5', email='test5@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=2)
+                       birthday='2018-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=2)
     student8 = Student(name='test6', email='test6@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=2)
+                       birthday='2005-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=2)
     student9 = Student(name='test9', email='test9@gmail.com',
-                       birthday='2018-02-20 00:00:00', address='test', classRoom_id=3)
+                       birthday='2005-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=3)
     student10 = Student(name='test10', email='test10@gmail.com',
-                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=3)
+                        birthday='2005-02-20 00:00:00', gender='nữ', phone='123456', address='test', classRoom_id=3)
     student11 = Student(name='test11', email='test11@gmail.com',
-                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=4)
+                        birthday='2005-02-20 00:00:00', gender='nữ', phone='123456', address='test', classRoom_id=4)
     student12 = Student(name='test12', email='test12@gmail.com',
-                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=4)
+                        birthday='2005-02-20 00:00:00', gender='nữ', phone='123456', address='test', classRoom_id=4)
     student13 = Student(name='test13', email='test13@gmail.com',
-                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=5)
+                        birthday='2004-02-20 00:00:00', gender='nữ', phone='123456', address='test', classRoom_id=5)
     student14 = Student(name='test14', email='test14@gmail.com',
-                        birthday='2018-02-20 00:00:00', address='test', classRoom_id=6)
+                        birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test', classRoom_id=6)
+    student15 = Student(name='test15', email='test15@gmail.com',
+                       birthday='2004-02-20 00:00:00', gender='nữ', phone='123456', address='test')
+    student16 = Student(name='test16', email='test16@gmail.com',
+                       birthday='2004-02-20 00:00:00', gender='nam', phone='123456', address='test')
+    student17 = Student(name='test17', email='test17@gmail.com',
+                        birthday='2004-02-20 00:00:00', gender='nữ', phone='123456', address='test')
+    student18 = Student(name='test18', email='test18@gmail.com',
+                        birthday='2005-02-20 00:00:00', gender='nữ', phone='123456', address='test')
+    student19 = Student(name='test19', email='test19@gmail.com',
+                        birthday='2005-02-20 00:00:00', gender='nữ', phone='123456', address='test')
+    student20 = Student(name='test20', email='test20@gmail.com',
+                        birthday='2005-02-20 00:00:00', gender='nữ', phone='123456', address='test')
+    student21 = Student(name='test21', email='test21@gmail.com',
+                        birthday='2005-02-20 00:00:00', gender='nam', phone='123456', address='test')
 
     db.session.add(student1)
     db.session.add(student2)
@@ -205,6 +222,13 @@ if __name__ == '__main__':
     db.session.add(student12)
     db.session.add(student13)
     db.session.add(student14)
+    db.session.add(student15)
+    db.session.add(student16)
+    db.session.add(student17)
+    db.session.add(student18)
+    db.session.add(student19)
+    db.session.add(student20)
+    db.session.add(student21)
     db.session.commit()
 
     subject1 = Subject(name='Toán')

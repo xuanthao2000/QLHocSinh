@@ -1,0 +1,72 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Chi tiết lớp học{% endblock %}
+
+{% block content %}
+
+
+{% if current_user.is_authenticated %}
+<h1>Lớp: {{class_room.name}}</h1>
+<h2>Sỉ số: {{class_room.number_of_students}}</h2>
+
+
+<table class="table table-bordered">
+    <h3 class="text-center">Danh sách lớp</h3>
+    <thead>
+    <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Họ tên</th>
+        <th scope="col">Giới tính</th>
+        <th scope="col">Ngày sinh</th>
+        <th scope="col">Địa chỉ</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for s in class_room.students %}
+    <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{s.name}}</td>
+        <td>{{s.gender}}</td>
+        <td>{{s.birthday.day}}-{{s.birthday.month}}-{{s.birthday.year}}</td>
+        <td>{{s.address}}</td>
+        <td>
+            <input type="button" value="Xóa khỏi lớp"
+                   onclick="remove({{class_room.id}}, {{ s.id }})">
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<hr/>
+<h3 class="text-center">Danh sách học sinh chưa được xếp lớp</h3>
+<div class="">
+    <table class="table table-responsive text-center">
+        <thead>
+        <tr>
+            <th scope="col">STT</th>
+            <th scope="col">ID học sinh</th>
+            <th scope="col">Tên học sinh</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for s in students %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{s.id}}</td>
+            <td>{{s.name}}</td>
+            <td>
+                <input type="button" value="Thêm vào lớp {{class_room.name}}"
+                       onclick="update({{class_room.id}}, {{ s.id }})">
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+<h1>Vui lòng <a href="/login">đăng nhập</a> để tiếp tục</h1>
+{% endif %}
+
+{% endblock %}
