@@ -155,6 +155,28 @@ def add_student(name, email, birthday, address, gender, phone):
     else:
         return True
 
+def add_class_room(name):
+    class_room = ClassRoom(name=name, number_of_students=0)
+    db.session.add(class_room)
+
+    try:
+        db.session.commit()
+    except:
+        return False
+    else:
+        return True
+
+def remove_class_room(id):
+    class_room = ClassRoom.query.get(id)
+    db.session.delete(class_room)
+
+    try:
+        db.session.commit()
+    except:
+        return False
+    else:
+        return True
+
 def add_class_to_student(classroom_id, student_id):
     classroom = ClassRoom.query.get(classroom_id)
     classroom.number_of_students = classroom.number_of_students + 1

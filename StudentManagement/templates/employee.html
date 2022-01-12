@@ -46,6 +46,11 @@ function showAddClass() {
 
 
 
+
+
+
+
+
 </script>
 
 
@@ -115,6 +120,12 @@ function showAddClass() {
             <td>{{c.name}}</td>
             <td>{{c.number_of_students}}</td>
             <td><a href="/classroom/{{c.id}}">chi tiết lớp</a></td>
+            <td>
+                <form method="post" action="{{ url_for('remove_class') }}">
+                    <input type="hidden" id="class_id" name="class_id" value="{{c.id}}">
+                    <input type="submit" value="xóa lớp">
+                </form>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
@@ -125,22 +136,18 @@ function showAddClass() {
 <div class="row justify-content-center" id="add-classroom" style="display:none">
     <div class="col-md-6">
         <h1>Thêm lớp học</h1>
-        <form method="post" class="was-validated" action="{{ url_for('add_student') }}">
+        <form method="post" class="was-validated" action="{{ url_for('add_class') }}">
             <div class="">
                 <div class="">
                     <div class="form-group">
                         <label for="class_name">Tên lớp: </label>
                         <input type="text" id="class_name" class="form-control" name="class_name" required>
                     </div>
-
-
                 </div>
-
             </div>
             <input type="submit" value="Thêm" class="btn btn-success">
         </form>
     </div>
-
 </div>
 {% else %}
 <h1>Vui lòng <a href="/login">đăng nhập</a> để tiếp tục</h1>

@@ -234,10 +234,16 @@ if __name__ == '__main__':
     subject1 = Subject(name='Toán')
     subject2 = Subject(name='Lý')
     subject3 = Subject(name='Hóa')
+    subject4 = Subject(name='Văn')
+    subject5 = Subject(name='Sinh')
+    subject6 = Subject(name='Tiếng anh')
 
     db.session.add(subject1)
     db.session.add(subject2)
     db.session.add(subject3)
+    db.session.add(subject4)
+    db.session.add(subject5)
+    db.session.add(subject6)
 
     db.session.commit()
 

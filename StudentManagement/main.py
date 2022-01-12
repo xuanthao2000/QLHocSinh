@@ -198,7 +198,52 @@ def add_student():
         except Exception as ex:
             error_msg = str(ex)
 
-    return render_template('employee.html', error_msg=error_msg,
+    return render_template('employee.html', error_msg=error_msg, success_msg=success_msg,
+                           class_room=DAO.get_all_class())
+
+
+@app.route('/add_class', methods=['get', 'post'])
+def add_class():
+    error_msg = ""
+    success_msg = ""
+    if request.method.__eq__('POST'):
+        try:
+            class_name = request.form['class_name']
+
+            if (DAO.add_class_room(class_name)):
+                success_msg = "Thêm thành công"
+                return render_template('employee.html', success_msg=success_msg,
+                                       class_room=DAO.get_all_class())
+            else:
+                error_msg = "Thêm thất bại !!!"
+                return render_template('employee.html', error_msg=error_msg,
+                                       class_room=DAO.get_all_class())
+        except Exception as ex:
+            error_msg = str(ex)
+
+    return render_template('employee.html', error_msg=error_msg, success_msg=success_msg,
+                           class_room=DAO.get_all_class())
+
+
+@app.route('/remove_class', methods=['post'])
+def remove_class():
+    error_msg = ""
+    success_msg = ""
+    if request.method.__eq__('POST'):
+        try:
+            class_id = request.form['class_id']
+            if (DAO.remove_class_room(class_id)):
+                success_msg = "Xóa thành công"
+                return render_template('employee.html', success_msg=success_msg,
+                                       class_room=DAO.get_all_class())
+            else:
+                error_msg = "Xóa thất bại !!!"
+                return render_template('employee.html', error_msg=error_msg,
+                                       class_room=DAO.get_all_class())
+        except Exception as ex:
+            error_msg = str(ex)
+
+    return render_template('employee.html', error_msg=error_msg, success_msg=success_msg,
                            class_room=DAO.get_all_class())
 
 
