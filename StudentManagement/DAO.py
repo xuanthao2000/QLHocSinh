@@ -16,33 +16,15 @@ def check_login(username, password):
         return Account.query.filter(Account.username.__eq__(username.strip()),
                                     Account.password.__eq__(password)).first()
 
+
 def check_login_admin(username, password, role=Role.ADMIN):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
 
     user = Account.query.filter(Account.username == username,
-                             Account.password == password,
-                             Account.user_role == role).first()
+                                Account.password == password,
+                                Account.user_role == role).first()
 
     return user
-
-# def check_login_emp(username, password, role=Role.EMPLOYEE):
-#     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
-#
-#     user = Account.query.filter(Account.username == username,
-#                                 Account.password == password,
-#                                 Account.user_role == role).first()
-#
-#     return user
-
-
-# def check_login_teacher(username, password, role=Role.TEACHER):
-#     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
-#
-#     user = Account.query.filter(Account.username == username,
-#                                 Account.password == password,
-#                                 Account.user_role == role).first()
-#
-#     return user
 
 
 def register_teacher(name, gender, birthday, phone, email, username, password):
@@ -114,6 +96,10 @@ def get_all_class():
     return ClassRoom.query.all()
 
 
+def get_all_subject():
+    return Subject.query.all()
+
+
 def get_student_no_class():
     students = db.session.query(Student.id, Student.name).filter(Student.classRoom_id == None)
     return students.all()
@@ -125,6 +111,16 @@ def get_all_semester():
 
 def get_all_subject():
     return Subject.query.all()
+
+def get_score(subject_id, student_id, semester_id):
+    s = db.session.query(Student.name, Score.score_15_1, Score.score_15_2, Score.score_15_3, Score.score_15_4, Score.score_15_5
+                         ,Score.score_60_1, Score.score_60_2, Score.score_60_3
+                         ,Score.score_final_exam, Score.score_avg)\
+        .join(Subject, Subject.id == Score.subject_id)\
+        .join(Student, Student.id == Score.student_id) \
+        .join(Semester, Semester.id == Score.semester_id)
+    result = s.filter(Score.subject_id == subject_id, Score.student_id == student_id, Score.semester_id == semester_id)
+    return result.first()
 
 
 def class_room_stats(se=None, sub=None, year=None):
@@ -155,6 +151,7 @@ def add_student(name, email, birthday, address, gender, phone):
     else:
         return True
 
+
 def add_class_room(name):
     class_room = ClassRoom(name=name, number_of_students=0)
     db.session.add(class_room)
@@ -166,6 +163,7 @@ def add_class_room(name):
     else:
         return True
 
+
 def remove_class_room(id):
     class_room = ClassRoom.query.get(id)
     db.session.delete(class_room)
@@ -176,6 +174,7 @@ def remove_class_room(id):
         return False
     else:
         return True
+
 
 def add_class_to_student(classroom_id, student_id):
     classroom = ClassRoom.query.get(classroom_id)
@@ -190,6 +189,7 @@ def add_class_to_student(classroom_id, student_id):
         return False
     else:
         return True
+
 
 def remove_class_from_student(classroom_id, student_id):
     student = Student.query.get(student_id)

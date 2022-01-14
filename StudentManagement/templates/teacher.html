@@ -6,7 +6,170 @@
 
 
 {% if current_user.is_authenticated %}
-<h1>giáo viên</h1>
+
+{% if error_msg %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error_msg }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+{% if success_msg %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ success_msg }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+<script>
+function showAddScore() {
+   document.getElementById('add-score').style.display = "";
+   document.getElementById('show-score').style.display = "none";
+}
+
+function showScore() {
+   document.getElementById('add-score').style.display = "none";
+   document.getElementById('show-score').style.display = "";
+}
+
+<!--function showAddClass() {-->
+<!--   document.getElementById('add-student').style.display = "none";-->
+<!--   document.getElementById('all-classroom').style.display = "none";-->
+<!--   document.getElementById('add-classroom').style.display = "";-->
+<!--}-->
+
+
+</script>
+
+
+<div class="row justify-content-center mb-5">
+    <button onclick="showAddScore()" class="btn card mr-5">thêm điểm</button>
+    <button onclick="showScore()" class="btn card mr-5">xuất điểm</button>
+    <!--    <button onclick="showAddClass()" class="btn card ">thêm lớp</button>-->
+</div>
+
+<div id="add-score" style="">
+    <form method="post" action="{{ url_for('show_score') }}">
+        <div class="d-flex">
+            <div class="ml-5" style="width:300px">
+                Lớp:
+                <select class="form-control" name="class_id">
+                    <option value="0">---</option>
+                    {% for c in class_room %}
+                    <option value="{{c.id}}">{{c.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="ml-5" style="width:300px">
+                Học kì:
+                <select class="form-control" name="semester_id">
+                    <option value="0">---</option>
+                    {% for i in semester %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="ml-5" style="width:300px">
+                Môn học:
+                <select class="form-control" name="subject_id">
+                    <option value="0">---</option>
+                    {% for s in subjects %}
+                    <option value="{{s.id}}">{{s.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="ml-5 mt-4">
+                <button type="submit" class="btn btn-secondary" id="btn-submit">Xem danh sách điểm</button>
+            </div>
+        </div>
+    </form>
+
+    <div id="table-score" class="mt-5">
+        <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Tên Học sinh</th>
+            <th scope="col">Điển 15 phút 1</th>
+            <th scope="col">Điển 15 phút 2</th>
+            <th scope="col">Điển 15 phút 3</th>
+            <th scope="col">Điển 15 phút 4</th>
+            <th scope="col">Điển 15 phút 5</th>
+            <th scope="col">Điển 1 tiết 1</th>
+            <th scope="col">Điển 1 tiết 2</th>
+            <th scope="col">Điểm trung bình</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in scores %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.score_15_1}}</td>
+            <td>{{item.score_15_2}}</td>
+            <td>{{item.score_15_3}}</td>
+            <td>{{item.score_15_4}}</td>
+            <td>{{item.score_15_5}}</td>
+            <td>{{item.score_60_1}}</td>
+            <td>{{item.score_60_2}}</td>
+            <td>{{item.score_avg}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+</div>
+<br><br>
+
+<div class="row justify-content-center" id="show-score" style="display:none">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Tên lớp</th>
+            <th scope="col">Sỉ số</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in class_room %}
+        <tr>
+            <td>{{c.id}}</td>
+            <td>{{c.name}}</td>
+            <td>{{c.number_of_students}}</td>
+            <td><a href="/classroom/{{c.id}}">chi tiết lớp</a></td>
+            <td>
+                <form method="post" action="{{ url_for('remove_class') }}">
+                    <input type="hidden" id="class_id" name="class_id" value="{{c.id}}">
+                    <input type="submit" value="xóa lớp">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<!--<div class="row justify-content-center" id="add-classroom" style="display:none">-->
+<!--    <div class="col-md-6">-->
+<!--        <h1>Thêm lớp học</h1>-->
+<!--        <form method="post" class="was-validated" action="{{ url_for('add_class') }}">-->
+<!--            <div class="">-->
+<!--                <div class="">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="class_name">Tên lớp: </label>-->
+<!--                        <input type="text" id="class_name" class="form-control" name="class_name" required>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <input type="submit" value="Thêm" class="btn btn-success">-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
 {% else %}
 <h1>Vui lòng <a href="/login">đăng nhập</a> để tiếp tục</h1>
 {% endif %}
