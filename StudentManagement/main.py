@@ -22,8 +22,6 @@ def teacher():
 #     return render_template('employee.html', class_room=DAO.get_all_class())
 
 
-
-
 @login.user_loader
 def load_user(user_id):
     return DAO.get_user_by_id(user_id=user_id)
@@ -188,6 +186,7 @@ def add_class():
     return render_template('employee.html', error_msg=error_msg, success_msg=success_msg,
                            class_room=DAO.get_all_class())
 
+
 @app.route('/classroom/<int:class_id>')
 def classDetail(class_id):
     return render_template('classDetail.html', class_room=DAO.get_class_room_by_id(id=class_id),
@@ -226,6 +225,7 @@ def remove_student_from_class():
 
     return jsonify({'code': 200})
 
+
 @app.route('/remove_class', methods=['post'])
 def remove_class():
     error_msg = ""
@@ -247,13 +247,16 @@ def remove_class():
     return render_template('employee.html', error_msg=error_msg, success_msg=success_msg,
                            class_room=DAO.get_all_class())
 
+
 @app.route('/add_score', methods=['get', 'post'])
 def add_score():
     error_msg = ""
     success_msg = ""
-    if request.method.__eq__('POST'):
+    if request.method.__eq__('GET'):
         try:
-            class_name = request.form['class_name']
+            class_id = request.form['class_id']
+
+            print(class_id)
 
             # if (DAO.add_class_room(class_name)):
             #     success_msg = "Thêm thành công"
@@ -267,7 +270,9 @@ def add_score():
             error_msg = str(ex)
 
     return render_template('teacher.html', error_msg=error_msg, success_msg=success_msg,
-                           semester=DAO.get_all_semester(), class_room=DAO.get_all_class(), subjects=DAO.get_all_subject())
+                           semester=DAO.get_all_semester(), class_room=DAO.get_all_class(),
+                           subjects=DAO.get_all_subject())
+
 
 @app.route('/show_score', methods=['post'])
 def show_score():
@@ -287,7 +292,8 @@ def show_score():
             error_msg = str(ex)
 
     return render_template('teacher.html', scores=array, semester=DAO.get_all_semester(),
-                           class_room=DAO.get_all_class(), subjects=DAO.get_all_subject())
+                           class_room=DAO.get_all_class(), subjects=DAO.get_all_subject(),
+                           )
 
 
 if __name__ == "__main__":

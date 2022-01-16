@@ -41,17 +41,21 @@ function showScore() {
 <!--   document.getElementById('add-classroom').style.display = "";-->
 <!--}-->
 
+function a(event) {
+  event.preventDefault();
+}
+
 
 </script>
 
 
 <div class="row justify-content-center mb-5">
-    <button onclick="showAddScore()" class="btn card mr-5">thêm điểm</button>
+    <button onclick="showAddScore()" class="btn card mr-5">xem danh sách lớp</button>
     <button onclick="showScore()" class="btn card mr-5">xuất điểm</button>
     <!--    <button onclick="showAddClass()" class="btn card ">thêm lớp</button>-->
 </div>
 
-<div id="add-score" style="">
+<div id="show-score" style="">
     <form method="post" action="{{ url_for('show_score') }}">
         <div class="d-flex">
             <div class="ml-5" style="width:300px">
@@ -89,43 +93,45 @@ function showScore() {
 
     <div id="table-score" class="mt-5">
         <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">id</th>
-            <th scope="col">Tên Học sinh</th>
-            <th scope="col">Điển 15 phút 1</th>
-            <th scope="col">Điển 15 phút 2</th>
-            <th scope="col">Điển 15 phút 3</th>
-            <th scope="col">Điển 15 phút 4</th>
-            <th scope="col">Điển 15 phút 5</th>
-            <th scope="col">Điển 1 tiết 1</th>
-            <th scope="col">Điển 1 tiết 2</th>
-            <th scope="col">Điểm trung bình</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item in scores %}
-        <tr>
-            <td>{{loop.index}}</td>
-            <td>{{item.name}}</td>
-            <td>{{item.score_15_1}}</td>
-            <td>{{item.score_15_2}}</td>
-            <td>{{item.score_15_3}}</td>
-            <td>{{item.score_15_4}}</td>
-            <td>{{item.score_15_5}}</td>
-            <td>{{item.score_60_1}}</td>
-            <td>{{item.score_60_2}}</td>
-            <td>{{item.score_avg}}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Tên Học sinh</th>
+                <th scope="col">Điển 15 phút 1</th>
+                <th scope="col">Điển 15 phút 2</th>
+                <th scope="col">Điển 15 phút 3</th>
+                <th scope="col">Điển 15 phút 4</th>
+                <th scope="col">Điển 15 phút 5</th>
+                <th scope="col">Điển 1 tiết 1</th>
+                <th scope="col">Điển 1 tiết 2</th>
+                <th scope="col">Điểm trung bình</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in scores %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.score_15_1}}</td>
+                <td>{{item.score_15_2}}</td>
+                <td>{{item.score_15_3}}</td>
+                <td>{{item.score_15_4}}</td>
+                <td>{{item.score_15_5}}</td>
+                <td>{{item.score_60_1}}</td>
+                <td>{{item.score_60_2}}</td>
+                <td>{{item.score_avg}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 </div>
 <br><br>
 
-<div class="row justify-content-center" id="show-score" style="display:none">
+<div class="row justify-content-center" id="add-score" style="display:none">
+
+
     <table class="table">
         <thead>
         <tr>
@@ -140,13 +146,7 @@ function showScore() {
             <td>{{c.id}}</td>
             <td>{{c.name}}</td>
             <td>{{c.number_of_students}}</td>
-            <td><a href="/classroom/{{c.id}}">chi tiết lớp</a></td>
-            <td>
-                <form method="post" action="{{ url_for('remove_class') }}">
-                    <input type="hidden" id="class_id" name="class_id" value="{{c.id}}">
-                    <input type="submit" value="xóa lớp">
-                </form>
-            </td>
+            <td><a href="/classroom/{{c.id}}">nhập điểm</a></td>
         </tr>
         {% endfor %}
         </tbody>

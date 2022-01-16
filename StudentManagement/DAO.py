@@ -95,6 +95,12 @@ def get_class_room_by_id(id):
 def get_all_class():
     return ClassRoom.query.all()
 
+def get_all_student_by_class_id(id):
+    s = db.session.query(Student.name).join(ClassRoom, ClassRoom.id == Student.classRoom_id)\
+        .filter(Student.classRoom_id == id)
+
+    return s.all
+
 
 def get_all_subject():
     return Subject.query.all()
